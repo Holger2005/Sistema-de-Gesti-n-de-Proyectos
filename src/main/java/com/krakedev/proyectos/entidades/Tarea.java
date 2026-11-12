@@ -25,6 +25,9 @@ public class Tarea {
 	@Column(nullable = false, length = 200)
 	private String descripcion;
 
+	@Column(nullable = true, length = 30)
+	private String estado;
+
 	@Column(nullable = false)
 	private LocalDate fechaLimite;
 
@@ -39,12 +42,16 @@ public class Tarea {
 	@JoinTable(name = "tarea_empleados", joinColumns = @JoinColumn(name = "tarea_id"), inverseJoinColumns = @JoinColumn(name = "empleado_id"))
 	private List<Empleado> empleados;
 
-	public Tarea(String descripcion, LocalDate fechaLimite, double costoEstimado, Proyecto proyecto) {
+	public Tarea(int id, String descripcion, String estado, LocalDate fechaLimite, double costoEstimado,
+			Proyecto proyecto, List<Empleado> empleados) {
+		super();
+		this.id = id;
 		this.descripcion = descripcion;
+		this.estado = estado;
 		this.fechaLimite = fechaLimite;
 		this.costoEstimado = costoEstimado;
 		this.proyecto = proyecto;
-
+		this.empleados = empleados;
 	}
 
 	public Tarea() {
@@ -96,6 +103,14 @@ public class Tarea {
 
 	public void setEmpleados(List<Empleado> empleados) {
 		this.empleados = empleados;
+	}
+
+	public String getEstado() {
+		return estado;
+	}
+
+	public void setEstado(String estado) {
+		this.estado = estado;
 	}
 
 }

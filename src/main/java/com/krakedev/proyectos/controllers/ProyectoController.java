@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,6 +26,7 @@ public class ProyectoController {
 	private ProyectoServices proyectoService;
 
 	@PostMapping
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<?> crear(@RequestBody Proyecto proyecto) {
 		try {
 			Proyecto creado = proyectoService.guardar(proyecto);
@@ -36,6 +38,7 @@ public class ProyectoController {
 	}
 
 	@GetMapping
+	@PreAuthorize("hasAnyRole('ADMIN', 'USER')")
 	public ResponseEntity<?> listar() {
 		try {
 			List<Proyecto> proyectos = proyectoService.listar();
@@ -65,7 +68,7 @@ public class ProyectoController {
 	public ResponseEntity<?> actualizar(@PathVariable int id, @RequestBody Proyecto proyecto) {
 		try {
 			proyecto.setId(id);
-			Proyecto actualizado = proyectoService.actualizar(id,proyecto);
+			Proyecto actualizado = proyectoService.actualizar(id, proyecto);
 			return ResponseEntity.ok(actualizado);
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -74,6 +77,7 @@ public class ProyectoController {
 	}
 
 	@DeleteMapping("/{id}")
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<?> eliminar(@PathVariable int id) {
 		try {
 			proyectoService.eliminar(id);
